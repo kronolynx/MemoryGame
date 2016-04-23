@@ -182,6 +182,26 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\cardflip.css" />
+    <Content Include="Content\img\Arcanine.png" />
+    <Content Include="Content\img\back.png" />
+    <Content Include="Content\img\blastoid.jpg" />
+    <Content Include="Content\img\Charmander.png" />
+    <Content Include="Content\img\Croagunk.png" />
+    <Content Include="Content\img\cubone.gif" />
+    <Content Include="Content\img\Eevee.png" />
+    <Content Include="Content\img\Fennekin.png" />
+    <Content Include="Content\img\fletchinder.png" />
+    <Content Include="Content\img\front.png" />
+    <Content Include="Content\img\Jirachi.png" />
+    <Content Include="Content\img\Munchlax.png" />
+    <Content Include="Content\img\Pachirisu.png" />
+    <Content Include="Content\img\pikachu.png" />
+    <Content Include="Content\img\Psyduck.png" />
+    <Content Include="Content\img\purrloin.png" />
+    <Content Include="Content\img\squirttle.png" />
+    <Content Include="Content\img\toggepi.png" />
+    <Content Include="Content\img\Victini.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -189,7 +209,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\handlebars-v4.0.5.js" />
+    <Content Include="Scripts\handlebars.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />

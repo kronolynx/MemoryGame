@@ -5,7 +5,7 @@
 @section head
 {
     <link rel="stylesheet" href="~/Content/cardflip.css" />
-    <script src="~/Scripts/handlebars-*.js"></script>
+    <script src="/Scripts/handlebars.js"></script>
 }
 
 <!--handlebars template --> 
@@ -14,10 +14,10 @@
         {{#each Pieces}}
             <div id="{{Name}}" class="click panel col-lg-2">
                 <div class="front">
-                    <img src="~/Content/img/back.jpg" />
+                    <img src="/Content/img/back.png" />
                 </div>
                 <div class="back">
-                    <img src="~/Content/img/front.png" />
+                    <img src="/Content/img/front.png" />
                 </div>
             </div>
             {{#endRow @@index}}
@@ -49,15 +49,43 @@
 
         // object to use as context for handlebars
         var game = { Pieces: new Array() };
-        for (var i = 0; i < 15; i++) {
-            game.Pieces[i] = { name: 'card-' + i };
-        }
+        // populate object
+        game.Pieces[0] = { Name: 'card-1' };
+        game.Pieces[1] = { Name: 'card-2' };
+        game.Pieces[2] = { Name: 'card-3' };
+        game.Pieces[3] = { Name: 'card-4' };
+        game.Pieces[4] = { Name: 'card-5' };
+        game.Pieces[5] = { Name: 'card-6' };
+        game.Pieces[6] = { Name: 'card-7' };
+        game.Pieces[7] = { Name: 'card-8' };
+        game.Pieces[8] = { Name: 'card-9' };
+        game.Pieces[9] = { Name: 'card-10' };
+        game.Pieces[10] = { Name: 'card-11' };
+        game.Pieces[11] = { Name: 'card-12' };
+        game.Pieces[12] = { Name: 'card-13' };
+        game.Pieces[13] = { Name: 'card-14' };
+        game.Pieces[14] = { Name: 'card-15' };
+        /*for (var i = 0; i < 15; i++) {
+            console.log("pieces " + i + " card-" + (i + 1));
+            var name = 'card-' + (i + 1);
+            game.Pieces[i] = { name: name  };
+        }*/
 
         // compile template 
-        var template = Handlebars.compile($("card-template").html());
+        var template = Handlebars.compile($("#card-template").html());
         // render template in the board div
         $("#board").html(template(game));
-    })
+
+        // collect all the cards and add class flip when clicked
+        // toggle takes 2 functions
+        $("div[id^=card-]").toggle(function (e) {
+            $(this).addClass('flip');
+        }, function () {
+            $(this).removeClass('flip');
+        });
+
+        //$("div[id^=card-]").click(alert());
+    });
 </script>
 <div id="board" class="container">
 
