@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@section head
+{
+    <link rel="stylesheet" href="~/Content/cardflip.css" />
+    <script src="~/Scripts/handlebars-*.js"></script>
+}
+
+<!--handlebars template --> 
+<script id="card-template" type="text/x-handlebars-template">
+    <div class="row">
+        {{#each Pieces}}
+            <div id="{{Name}}" class="click panel col-lg-2">
+                <div class="front">
+                    <img src="~/Content/img/back.jpg" />
+                </div>
+                <div class="back">
+                    <img src="~/Content/img/front.png" />
+                </div>
+            </div>
+            {{#endRow @@index}}
+                <div class="col-lg-2">
+
+                </div>
+            </div>
+            <div class="row">
+            {{/endRow}}
+        {{/each}}
+    </div>
+</script>
+<h2>Index</h2>
+
+<!-- script to compile template and define context to populate template-->
+<script type="text/javascript">
+    $(function () {
+        // register handlebar helper
+        /*
+         * params, name of the helper and callback
+         */
+        Handlebars.registerHelper('endRow', function (conditional, options) {
+            // tell handlebars if we are at the end of the row
+            if ((conditional + 1) % 5 == 0 && conditional > 0) {
+                return options.fn(this);
+            }
+            return "";
+        });
+
+        // object to use as context for handlebars
+        var game = { Pieces: new Array() };
+        for (var i = 0; i < 15; i++) {
+            game.Pieces[i] = { name: 'card-' + i };
+        }
+
+        // compile template 
+        var template = Handlebars.compile($("card-template").html());
+        // render template in the board div
+        $("#board").html(template(game));
+    })
+</script>
+<div id="board" class="container">
+
+</div>
