@@ -12,7 +12,7 @@ namespace CardGame.Models
 
         public Board Board { get; set; }
 
-        public Card lastCard { get; set; }
+        public Card LastCard { get; set; }
         public string WhosTurn { get; set; }
     }
 }
