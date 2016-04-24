@@ -1,5 +1,6 @@
 ﻿
 .panel {
+    display: inline;
     float: left;
     width: 150px;
     height: 150px;
@@ -57,10 +58,10 @@
     z-index: 900;
     background: #333;
 
-    transform: rotateY('180deg');
-    -ms-transform: rotateY('180deg');
-    -webkit-transform: rotateY('180deg');
-    -moz-transform: rotateY('180deg');
+    transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
 }
 
 .panel .back {
@@ -74,19 +75,19 @@
     background: #333;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
 
-    transform: rotateY('-180deg');
+    transform: rotateY(-180deg);
     transform-style: preserve-3d;
     backface-visibility: hidden;
 
-    -ms-transform: rotateY('-180deg');
+    -ms-transform: rotateY(-180deg);
     -ms-transform-style: preserve-3d;
     -ms-backface-visibility: hidden;
 
-    -webkit-transform: rotateY('-180deg');
+    -webkit-transform: rotateY(-180deg);
     -webkit-transform-style: preserve-3d;
     -webkit-backface-visibility: hidden;
 
-    -moz-transform: rotateY('-180deg');
+    -moz-transform: rotateY(-180deg);
     -moz-transform-style: preserve-3d;
     -moz-backface-visibility: hidden;
 
@@ -101,8 +102,8 @@
     z-index: 1000;
     background: #80868d;
 
-    transform: rotateY('0deg');
-    -ms-transform: rotateY('0deg');
-    -webkit-transform: rotateY('0deg');
-    -moz-transform: rotateY('0deg');
+    transform: rotateY(0deg);
+    -ms-transform: rotateY(0deg);
+    -webkit-transform: rotateY(0deg);
+    -moz-transform: rotateY(0deg);
 }

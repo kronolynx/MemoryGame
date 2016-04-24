@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Index";
 }
 
 @section head
@@ -21,16 +21,15 @@
                 </div>
             </div>
             {{#endRow @@index}}
-                <div class="col-lg-2">
-
-                </div>
-            </div>
-            <div class="row">
+                    <div class="col-lg-2"></div>
+                </div>        
+                <div class="row">
             {{/endRow}}
         {{/each}}
     </div>
 </script>
-<h2>Index</h2>
+
+<h2>Card Game</h2>
 
 <!-- script to compile template and define context to populate template-->
 <script type="text/javascript">
@@ -65,26 +64,26 @@
         game.Pieces[12] = { Name: 'card-13' };
         game.Pieces[13] = { Name: 'card-14' };
         game.Pieces[14] = { Name: 'card-15' };
-        /*for (var i = 0; i < 15; i++) {
-            console.log("pieces " + i + " card-" + (i + 1));
-            var name = 'card-' + (i + 1);
-            game.Pieces[i] = { name: name  };
-        }*/
+        //for (var i = 0; i < 15; i++) {
+        //    console.log("pieces " + i + " card-" + (i + 1));
+        //    var namec = 'card-' + (i + 1);
+        //    game.Pieces[i] = { name: namec  };
+        //}
 
         // compile template 
         var template = Handlebars.compile($("#card-template").html());
         // render template in the board div
         $("#board").html(template(game));
 
-        // collect all the cards and add class flip when clicked
-        // toggle takes 2 functions
-        $("div[id^=card-]").toggle(function (e) {
-            $(this).addClass('flip');
-        }, function () {
-            $(this).removeClass('flip');
+        //add class flip when clicked
+        $('.click').click(function () {
+            var e = $(this);
+            if (!e.hasClass('flip')) {
+                e.addClass('flip');
+            } else {
+                e.removeClass('flip');
+            }
         });
-
-        //$("div[id^=card-]").click(alert());
     });
 </script>
 <div id="board" class="container">
