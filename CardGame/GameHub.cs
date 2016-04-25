@@ -64,7 +64,7 @@ namespace CardGame
             return false;
         }
 
-        public bool FLip(string cardName)
+        public bool Flip(string cardName)
         {
             // get username of the person who flipped the card
             var userName = Clients.Caller.name;
@@ -84,7 +84,7 @@ namespace CardGame
 
                     var card = FindCard(game, cardName);
                     // notify both players that the card must be flipped
-                    Clients.Group(player.group).flipCard(card);
+                    Clients.Group(player.Group).flipCard(card);
                     return true;
                 }
             }
