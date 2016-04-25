@@ -1,43 +1,91 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Game";
+    Layout = "~/Views/Shared/_layout.cshtml";
 }
 
 @section head
 {
     <link rel="stylesheet" href="~/Content/cardflip.css" />
     <script src="/Scripts/handlebars.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.2.0.js"></script>
+    <script src="/signalr/hubs"></script>
 }
 
-<!--handlebars template --> 
+<style>
+    .list-inline {
+        padding-left: 2px;
+        padding-right: 2px;
+        padding-bottom: 6px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2">
+            <div style="padding: 2px">
+                <h3 id="name">User</h3>
+                <input type="text" id="usernameTb" class="form-control" />
+                <span class="help-block" id="alert">Please enter your name</span>
+                <input type="button" id="join" value="join" class="btn btn-primary" />
+                <h3>matches</h3>
+                <ul id="wins" class="list-inline">
+
+                </ul>
+                <div class="col-lg-10" id="board"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--handlebars template -->
 <script id="card-template" type="text/x-handlebars-template">
     <div class="row">
         {{#each Pieces}}
-            <div id="{{Name}}" class="click panel col-lg-2">
-                <div class="front">
-                    <img src="/Content/img/back.png" />
-                </div>
-                <div class="back">
-                    <img src="/Content/img/front.png" />
-                </div>
+        <div id="{{Name}}" class="click panel col-lg-2">
+            <div class="front">
+                <img src="{{Image}}" width="150" height="150" style="opacity: .125" />
             </div>
-            {{#endRow @@index}}
-                    <div class="col-lg-2"></div>
-                </div>        
-                <div class="row">
-            {{/endRow}}
+            <div class="back">
+                <img src="{{Image}}" width="150" height="150"" />
+            </div>
+        </div>
+        {{#endRow @@index}}
+      </div>
+    <div class="row">
+        {{/endRow}}
         {{/each}}
     </div>
 </script>
 
-<h2>Card Game</h2>
-
-<!-- script to compile template and define context to populate template-->
 <script type="text/javascript">
     $(function () {
-        // register handlebar helper
+        $('#join').attr('disabled', 'disabled');
+        var gameHub = $.connection.gameHub;
+
+        // start hub and enable join button
+        $.connection.hub.start().done(function () {
+            $('#join').removeAttr('disabled');
+        });
+
+        // join button listener
+        $('#join').click(function () {
+            var userName = $('#usernameTb').val();
+            // join the game
+            gameHub.server.join(userName);
+        })
+
+        // user join 
+        var userId;
+        gameHub.client.playerJoined = function (user) {
+            userid = user.Id;
+            $('#usernameTb').attr('disabled', 'disabled');
+            $('#join').attr('disabled', 'disabled');
+        }
+
         /*
-         * params, name of the helper and callback
-         */
+        * register handlebar helper
+        * params, name of the helper and callback
+        */
         Handlebars.registerHelper('endRow', function (conditional, options) {
             // tell handlebars if we are at the end of the row
             if ((conditional + 1) % 5 == 0 && conditional > 0) {
@@ -46,46 +94,75 @@
             return "";
         });
 
-        // object to use as context for handlebars
-        var game = { Pieces: new Array() };
-        // populate object
-        game.Pieces[0] = { Name: 'card-1' };
-        game.Pieces[1] = { Name: 'card-2' };
-        game.Pieces[2] = { Name: 'card-3' };
-        game.Pieces[3] = { Name: 'card-4' };
-        game.Pieces[4] = { Name: 'card-5' };
-        game.Pieces[5] = { Name: 'card-6' };
-        game.Pieces[6] = { Name: 'card-7' };
-        game.Pieces[7] = { Name: 'card-8' };
-        game.Pieces[8] = { Name: 'card-9' };
-        game.Pieces[9] = { Name: 'card-10' };
-        game.Pieces[10] = { Name: 'card-11' };
-        game.Pieces[11] = { Name: 'card-12' };
-        game.Pieces[12] = { Name: 'card-13' };
-        game.Pieces[13] = { Name: 'card-14' };
-        game.Pieces[14] = { Name: 'card-15' };
-        //for (var i = 0; i < 15; i++) {
-        //    console.log("pieces " + i + " card-" + (i + 1));
-        //    var namec = 'card-' + (i + 1);
-        //    game.Pieces[i] = { name: namec  };
-        //}
+        gameHub.client.buildBoard = function (game) {
+            // compile template 
+            var template = Handlebars.compile($("#card-template").html());
+            // render template in the board div
+            $("#board").html(template(game.Board));
 
-        // compile template 
-        var template = Handlebars.compile($("#card-template").html());
-        // render template in the board div
-        $("#board").html(template(game));
-
-        //add class flip when clicked
-        $('.click').click(function () {
-            var e = $(this);
-            if (!e.hasClass('flip')) {
-                e.addClass('flip');
+            if (userId == game.WhosTurn) {
+                $("#alert").html("Let's begin the game, you go first!");
             } else {
-                e.removeClass('flip');
+                $("#alert").html("Let's begin the game, your opponent goes first!");
             }
-        });
-    });
-</script>
-<div id="board" class="container">
 
+            $('div[id^=card-]').click(function (e) {
+                e.preventDefault();
+
+                var id = this.id;
+                var card = $('#' + id);
+
+                if (!card.hasClass('match') && !card.hasClass('flip')) {
+                    gameHub.server.flip(id).done(function (result) {
+                        if (result) {
+                            gameHub.server.checkCard(id);
+                        }
+                    })
+                }
+            })
+        };
+
+        gameHub.client.flipCard = function (card) {
+            var card = $('#card-' + card.Id);
+            $(card).addClass('flip');
+        }
+
+        gameHub.client.resetFlip = function (cardA, cardB) {
+            var cA = $("#card-" + cardA.Id);
+            var cB = $("#card-" + cardB.Id);
+
+            var delay = setTimeout(function () {
+                cA.removeClass("flip");
+                cB.removeClass("flip");
+            }, 1500);
+        }
+
+        gameHub.client.showMatch = function (card, winner) {
+            $("#card-" + card.Id).addClass("match");
+            $("#card-" + card.Pair).addClass("match");
+
+            $("#alert").html(winner + " found a match!");
+            if (winner == $("#usernameTb").val()) {
+                $("#wins").append("<li><img src='" + card.Image + "' width='30' height='30'></li>");
+            }
+        }
+
+        gameHub.client.waitingList = function () {
+            $('#alert').html("No opponent available, waiting ...");
+        }
+
+    })
+</script>
+
+<div class="modal fade" id="winModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h1 id="modal-headline"></h1>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dissmiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
